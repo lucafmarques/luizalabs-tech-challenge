@@ -69,10 +69,10 @@ def add_to_favorites(db: Session, db_user: User, product: str):
     
     db_user.favorites.append(product)
     db.commit()
-    db.refresh(db_user)
+    db.refresh(db_user) 
     
     return db_user, True
 
 def remove_user_favorites(db: Session, db_user: User, product: str):
-    db_user.remove(product)
+    db_user.favorites.remove(product)
     db.commit()

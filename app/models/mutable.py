@@ -2,6 +2,10 @@ from sqlalchemy.ext.mutable import Mutable
 from sqlalchemy.dialects.postgresql import ARRAY
 
 class MutableList(Mutable, list):
+    def remove(self, value):
+        list.remove(self, value)
+        self.changed()
+
     def append(self, value):
         list.append(self, value)
         self.changed()

@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends, status
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
-from models.user import get_user_by_email, add_to_favorites
+from models.user import get_user_by_email, add_to_favorites, remove_user_favorites
 from utils.utils import db_session, valid_product
 
 router = APIRouter()
@@ -28,7 +28,7 @@ async def add_favorite(user_email: str, product_id: str, db: Session = Depends(d
         }, status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     return JSONResponse({
-        "message": "Added item to user favorites."
+        "message": "Item added to user favorites."
     }, status_code=status.HTTP_200_OK)
 
 @router.get("/{user_email}")
@@ -42,4 +42,18 @@ async def get_favorites(user_email: str, db: Session = Depends(db_session)):
     return JSONResponse({
         "uuid": str(db_user.uuid),
         "favorites": db_user.favorites
+    }, status_code=status.HTTP_200_OK)
+
+@router.delete("/{user_email}/{product_id}")
+async def remove_favorite(user_email: str, product_id: str, db: Session = Depends(db_session)):
+    db_user = get_user_by_email(db, user_email)
+    if db_user is None:
+        return JSONResponse({
+            "message": "User doesn't exist"
+        }, status_code=status.HTTP_400_BAD_REQUEST)
+
+    remove_user_favorites(db, db_user, product_id)
+
+    return JSONResponse({
+        "message": "Item removed from user favorites."
     }, status_code=status.HTTP_200_OK)
