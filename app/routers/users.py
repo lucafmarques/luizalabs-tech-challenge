@@ -1,10 +1,9 @@
 from fastapi import APIRouter, HTTPException, Depends, status
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
-from schemas.product import Product
+
 from schemas.user import User, UserUpdate
 from models.user import get_user_by_email, create_user, delete_user, update_user_info, get_users, remove_user_favorites
-
 from utils.utils import db_session, valid_product
 
 router = APIRouter()
@@ -31,6 +30,12 @@ async def get_user(email: str, db: Session = Depends(db_session)):
         return JSONResponse({
             "msg": "No user with that email.",
         }, status_code=status.HTTP_400_BAD_REQUEST)
+
+    for id in db_user.favorites:
+        product_data, ok = valid_product(id)
+        if not ok:
+            remove_user_favorites(db, db_user, id)
+            continue
     
     user = {
         "uuid": str(db_user.uuid),
