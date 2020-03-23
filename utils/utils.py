@@ -1,26 +1,25 @@
-import json
-from pydantic import BaseModel
+import requests
+from fastapi import status
 
-from routers.auth import TOKENS
-
-class Config(BaseModel):
-    DB_URL: str = "127.0.0.1:5432"
-    DB_USER: str = "admin"
-    DB_PASSWORD: str = "7eef259c-e762-416d-ae00-dee029ab6d9b"
-
-    def URL(self):
-        return f"postgresql://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_URL}/luizalabs"
+from schemas.product import Product
+from db import SessionLocal, engine, config
 
 def valid_token(token: str):
-    return token in TOKENS
+    pass    
 
-def create_schema():
-    pass
+def db_session():
+    try:
+        db = SessionLocal()
+        yield db
+    finally:
+        db.close()
 
-def read_config(path: str):
-    with open(path) as raw_config:
-        data = json.load(raw_config)
+def valid_product(product_id: str):
+    url = f"{config.PRODUCT_URL}/{product_id}"
 
-    return Config.parse_obj(data)
+    resp = requests.get(url)
+    if resp.status_code == status.HTTP_400_BAD_REQUEST:
+        return {}, False
 
+    return resp.json(), True
     
