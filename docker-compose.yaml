@@ -1,0 +1,30 @@
+version: '3.3'
+services:  
+  postgres:
+    container_name: postgres_container
+    image: postgres
+    environment:
+      - POSTGRES_DB=luizalabs
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=7eef259c-e762-416d-ae00-dee029ab6d9b
+      - PGDATA=/data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+    - "5432:5432"
+    restart: unless-stopped
+    network_mode: "host"
+
+  
+  server:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    network_mode: "host"
+    depends_on:
+      - postgres
+    ports:
+    - "80:80"
+
+volumes:
+  postgres:
