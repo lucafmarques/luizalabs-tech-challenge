@@ -31,21 +31,12 @@ async def get_user(email: str, db: Session = Depends(db_session)):
         return JSONResponse({
             "message": "No user with that email.",
         }, status_code=status.HTTP_400_BAD_REQUEST)
-
-    products = []
-    for id in db_user.favorites:
-        product_data, ok = valid_product(id)
-        if not ok:
-            remove_user_favorites(db, db_user, id)
-            continue
-        
-        products.append(product_data)
     
     user = {
         "uuid": str(db_user.uuid),
         "email": db_user.email,
         "username": db_user.username,
-        "favorites": products
+        "favorites": db_user.favorites,
     }
 
     return JSONResponse(user, status_code=status.HTTP_200_OK)

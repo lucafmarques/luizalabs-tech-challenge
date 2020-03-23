@@ -24,8 +24,8 @@ async def add_favorite(user_email: str, product_id: str, db: Session = Depends(d
     user, ok = add_to_favorites(db, db_user, product_id)
     if not ok:
         return JSONResponse({
-            "message": "Operation failed"
-        }, status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            "message": "Item already in user favorites."
+        }, status_code=status.HTTP_400_BAD_REQUEST)
     
     return JSONResponse({
         "message": "Item added to user favorites."
@@ -39,9 +39,18 @@ async def get_favorites(user_email: str, db: Session = Depends(db_session)):
             "message": "User doesn't exist"
         }, status_code=status.HTTP_400_BAD_REQUEST)
 
+    products = []
+    for id in db_user.favorites:
+        product_data, ok = valid_product(id)
+        if not ok:
+            remove_user_favorites(db, db_user, id)
+            continue
+        
+        products.append(product_data)
+
     return JSONResponse({
-        "uuid": str(db_user.uuid),
-        "favorites": db_user.favorites
+        "email": db_user.email,
+        "favorites": products
     }, status_code=status.HTTP_200_OK)
 
 @router.delete("/{user_email}/{product_id}")
