@@ -39,7 +39,7 @@ Create a config.json file at the root of the project, like such:
 Docker compose allow us to easily share environments, their setup and so much more. To run this project with docker-compose:
 
 ```sh
-> cd your/path/to/luizalabs-technical-test
+> cd your/path/to/luizalabs-technical-test/deploy
 > docker-compose build && docker-compose up
 ```
 
