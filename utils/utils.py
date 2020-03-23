@@ -18,7 +18,7 @@ def valid_product(product_id: str):
     url = f"{config.PRODUCT_URL}/{product_id}"
 
     resp = requests.get(url)
-    if resp.status_code == status.HTTP_400_BAD_REQUEST:
+    if resp.status_code != status.HTTP_200_OK:
         return {}, False
 
     return resp.json(), True
