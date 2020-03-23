@@ -4,9 +4,7 @@ import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-from config import read_config
-
-config = read_config(os.getenv('CONFIG_PATH'))
+from config import config
 
 db_url = config.URL()
 db = databases.Database(db_url)
