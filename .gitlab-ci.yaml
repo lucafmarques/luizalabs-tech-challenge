@@ -1,0 +1,35 @@
+stages:
+  - test
+  - build
+
+variables:
+  RELEASE_APP_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG
+
+Python Tests:
+  stage: test
+  image: python:3.7
+  except: 
+    - tags
+  before_script:
+    - apt update -y
+    - pip install -r app/requirements.txt
+  script:
+    - cd app
+    - coverage run --source=. ${which nosetests}
+    - coverage report
+  retry: 2
+
+Build Release:
+  stage: build
+  image: docker:stable
+  only:
+    - tags
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  script:
+    - docker build -t $RELEASE_APP_TAG -f deploy/Dockerfile .
+    - docker push $RELEASE_APP_TAG
+  retry: 2
+
