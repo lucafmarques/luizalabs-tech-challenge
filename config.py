@@ -12,7 +12,7 @@ class Config(BaseModel):
     DB_USER: str = "admin"
     DB_PASSWORD: str = "7eef259c-e762-416d-ae00-dee029ab6d9b"
     ADMIN: AuthUser
-    SECRET_KEY: str = "b2lhZ2FsZXJhcXVldGFtZWF2YWxpYW5kbw=="
+    SECRET_KEY: str
     PRODUCT_URL: str = "http://challenge-api.luizalabs.com/api/product/"
 
     def URL(self):
