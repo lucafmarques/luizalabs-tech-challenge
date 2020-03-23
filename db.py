@@ -2,8 +2,9 @@ import os
 import databases
 import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
-from utils.utils import read_config
+from config import read_config
 
 config = read_config(os.getenv('CONFIG_PATH'))
 
@@ -14,3 +15,5 @@ metadata = sqlalchemy.MetaData()
 engine = sqlalchemy.create_engine(db_url)
 metadata.create_all(engine)
 Base = declarative_base()
+
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
