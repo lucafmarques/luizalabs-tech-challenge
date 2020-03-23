@@ -1,6 +1,7 @@
-from fastapi import Depends, Header, FastAPI, HTTPException, status
+from fastapi import Depends, Header, FastAPI, status
+from fastapi.responses import JSONResponse
 
-from utils.utils import valid_token
+from utils.auth import valid_token
 from routers import users, auth, favorites
 from db import db, Base, engine
 
@@ -10,12 +11,16 @@ app = FastAPI()
 
 async def auth_token(token: str = Header(...)):
     if not valid_token(token):
-        raise HTTPException(status_code=400, detail="X-Token header is invalid.")
+        return JSONResponse(
+            {"message": "Could not validate access token."},
+            headers={"WWW-Authenticate": "Bearer"},
+            status_code=status.HTTP_401_UNAUTHORIZED
+        )
 
 app.include_router(
     users.router,
     prefix="/users",
-    # dependencies=[Depends(auth_token)],
+    dependencies=[Depends(auth_token)],
     responses={
         404: {'error': 'Path not found'}
     }
