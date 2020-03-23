@@ -17,7 +17,7 @@ async def gen_token(form_data: OAuth2PasswordRequestForm = Depends()):
     user = authenticate_user(config.ADMIN, form_data.username, form_data.password)
     if not user:
         return JSONResponse({
-            "message": "No user with those credentials."
+            "msg": "No user with those credentials."
         }, status_code=status.HTTP_401_UNAUTHORIZED)
     
     token_expire = timedelta(minutes=ACCESS_TOKEN_EXPIRE)

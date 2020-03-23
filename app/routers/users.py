@@ -18,7 +18,7 @@ async def new_user(user: User, db: Session = Depends(db_session)):
     db_user = get_user_by_email(db, user.email)
     if db_user:
         return JSONResponse({
-            "message": "Email already registered.",
+            "msg": "Email already registered.",
         }, status_code=status.HTTP_400_BAD_REQUEST)
     return JSONResponse(
         create_user(db, user).json(),
@@ -29,7 +29,7 @@ async def get_user(email: str, db: Session = Depends(db_session)):
     db_user = get_user_by_email(db, email)
     if db_user is None:
         return JSONResponse({
-            "message": "No user with that email.",
+            "msg": "No user with that email.",
         }, status_code=status.HTTP_400_BAD_REQUEST)
     
     user = {
@@ -46,7 +46,7 @@ async def update_user(email: str, user: UserUpdate, db: Session = Depends(db_ses
     user, ok = update_user_info(db, email, user)
     if not ok: 
         return JSONResponse({
-            "message": "Couldn't update user info."
+            "msg": "Couldn't update user info."
         }, status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     return JSONResponse(
@@ -59,11 +59,11 @@ async def remove_user(email: str, db: Session = Depends(db_session)):
     msg, ok = delete_user(db, email)
     if not ok:
         return JSONResponse({
-            "message": "Operation failed.",
-            "error": msg,
+            "msg": "Operation failed.",
+            "err": msg,
         }, status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     return JSONResponse({
-        "message": msg,
+        "msg": msg,
     }, status_code=status.HTTP_200_OK)
     

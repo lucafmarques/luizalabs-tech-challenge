@@ -12,23 +12,23 @@ async def add_favorite(user_email: str, product_id: str, db: Session = Depends(d
     db_user = get_user_by_email(db, user_email)
     if db_user is None:
         return JSONResponse({
-            "message": "User doesn't exist"
+            "msg": "User doesn't exist"
         }, status_code=status.HTTP_400_BAD_REQUEST)
     
     _, ok = valid_product(product_id) 
     if not ok:
         return JSONResponse({
-            "message": "No product with that ID"
+            "msg": "No product with that ID"
         }, status_code=status.HTTP_400_BAD_REQUEST)
     
     user, ok = add_to_favorites(db, db_user, product_id)
     if not ok:
         return JSONResponse({
-            "message": "Item already in user favorites."
+            "msg": "Item already in user favorites."
         }, status_code=status.HTTP_400_BAD_REQUEST)
     
     return JSONResponse({
-        "message": "Item added to user favorites."
+        "msg": "Item added to user favorites."
     }, status_code=status.HTTP_200_OK)
 
 @router.get("/{user_email}")
@@ -36,7 +36,7 @@ async def get_favorites(user_email: str, db: Session = Depends(db_session)):
     db_user = get_user_by_email(db, user_email)
     if db_user is None:
         return JSONResponse({
-            "message": "User doesn't exist"
+            "msg": "User doesn't exist"
         }, status_code=status.HTTP_400_BAD_REQUEST)
 
     products = []
@@ -58,11 +58,11 @@ async def remove_favorite(user_email: str, product_id: str, db: Session = Depend
     db_user = get_user_by_email(db, user_email)
     if db_user is None:
         return JSONResponse({
-            "message": "User doesn't exist"
+            "msg": "User doesn't exist"
         }, status_code=status.HTTP_400_BAD_REQUEST)
 
     remove_user_favorites(db, db_user, product_id)
 
     return JSONResponse({
-        "message": "Item removed from user favorites."
+        "msg": "Item removed from user favorites."
     }, status_code=status.HTTP_200_OK)
