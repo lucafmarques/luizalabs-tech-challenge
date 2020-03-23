@@ -4,9 +4,6 @@ from fastapi import status
 from schemas.product import Product
 from db import SessionLocal, engine, config
 
-def valid_token(token: str):
-    pass    
-
 def db_session():
     try:
         db = SessionLocal()
