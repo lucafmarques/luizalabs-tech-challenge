@@ -29,7 +29,7 @@ Build Release:
   before_script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
-    - docker build -t $RELEASE_APP_TAG .
+    - docker build -t $RELEASE_APP_TAG deploy/Dockerfile
     - docker push $RELEASE_APP_TAG
   retry: 2
 
