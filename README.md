@@ -73,16 +73,16 @@ Now, install the required Python packages.
 We're ready to go! Now run it!
 
 ```sh
-> CONFIG_PATH=<path/to/config.json> uvicorn --port 80 main:app
+> CONFIG_PATH=<path/to/config.json> uvicorn main:app
 ```
 
 If in development instead run
 
 ```sh
-> CONFIG_PATH=<path/to/config.json> unicorn --port 80 main:app --reload
+> CONFIG_PATH=<path/to/config.json> unicorn main:app --reload
 ```
 
-You can now make requests to the API, have fun!
+You can now make requests to the API at localhost:8000, have fun!
 
 ---
 
@@ -90,5 +90,7 @@ You can now make requests to the API, have fun!
 
 Basic documentation for the API can be found after running the project and going to either:
 
-- [OpenAPI/Swagger](http://localhost:80/docs)
-- [ReDoc](http://localhost:80/redoc)
+- OpenAPI/Swagger => localhost:PORT/docs
+- ReDoc => localhost:PORT/redoc
+
+Where PORT is the port the service is running on. Defaults to 8000 when run in a local instance way and to 80 when run through docker-compose.
