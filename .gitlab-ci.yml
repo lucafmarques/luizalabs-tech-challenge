@@ -15,7 +15,7 @@ Python Tests:
     - pip install -r app/requirements.txt
   script:
     - cd app
-    - coverage run --source=. ${which nosetests}
+    - coverage run --source=. ${which pytest}
     - coverage report
   retry: 2
 
