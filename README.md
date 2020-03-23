@@ -4,16 +4,19 @@ This project is an API for a fictional Customer/Favorite Product service.
 
 This is a REST service consisting of multiple endpoints for data retrieval and manipulation.
 
----
+## Choices
+
+This project was built with the following technologies, frameworks and tools: FastAPI as the API framework (including Pydantic for data validation, Sqlalchemy for database manipulation and OpenAPI for generating automatic API documentation), Postgres as the database, Docker (with docker-compose for easier distribution to test reviewers), JWT for access token generation, GitLab CI.
+
+Most of the technology choices were made to prioritize learning new things and solidifying concepts, such as, learning the FastAPI framework (and its underlying libraries) and applying prior Postgres knowledge with Python.
 
 ## Requirements
 
 - Python >= 3.6;
 - Docker
-  - Docker-Compose (if wanted)
+  - Docker-Compose *optional*
 - Postgres
 
----
 
 ## Running it
 
@@ -83,8 +86,6 @@ If in development instead run
 ```
 
 You can now make requests to the API at localhost:8000, have fun!
-
----
 
 ## Documentation
 
