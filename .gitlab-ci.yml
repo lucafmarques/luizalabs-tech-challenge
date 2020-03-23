@@ -15,8 +15,7 @@ Python Tests:
     - pip install -r app/requirements.txt
   script:
     - cd app
-    - coverage run pytest
-    - coverage report
+    - pytest --cov=.
   retry: 2
 
 Build Release:
