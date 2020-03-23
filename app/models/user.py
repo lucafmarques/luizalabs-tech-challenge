@@ -42,7 +42,7 @@ def create_user(db: Session, user: UserCreate):
 
 def update_user_info(db: Session, email: str, user: UserUpdate):
     db_user = get_user_by_email(db, email)
-    if not db_user:
+    if db_user is None:
         return None, False
     db_user.email = user.email or db_user.email
     db_user.username = user.username or db_user.username

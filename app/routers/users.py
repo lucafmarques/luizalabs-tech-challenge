@@ -27,7 +27,7 @@ async def new_user(user: User, db: Session = Depends(db_session)):
 @router.get("/{email}", response_model=User)
 async def get_user(email: str, db: Session = Depends(db_session)):
     db_user = get_user_by_email(db, email)
-    if not db_user:
+    if db_user is None:
         return JSONResponse({
             "message": "No user with that email.",
         }, status_code=status.HTTP_400_BAD_REQUEST)
