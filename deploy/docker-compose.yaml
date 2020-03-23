@@ -18,8 +18,8 @@ services:
   
   server:
     build:
-      context: ./
-      dockerfile: Dockerfile
+      context: ../
+      dockerfile: deploy/Dockerfile
     network_mode: "host"
     depends_on:
       - postgres
