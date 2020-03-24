@@ -10,7 +10,7 @@ router = APIRouter()
 
 @router.get("/")
 async def all_users(db: Session = Depends(db_session)):
-    return get_users(db)
+    return await get_users(db)
 
 @router.post("/", response_model=User)
 async def new_user(user: User, db: Session = Depends(db_session)):
@@ -25,9 +25,9 @@ async def new_user(user: User, db: Session = Depends(db_session)):
         new_user.json(),
         status_code=status.HTTP_201_CREATED)
 
-@router.get("/{email}", response_model=User)
-async def get_user(email: str, db: Session = Depends(db_session)):
-    db_user = await get_user_by_email(db, email)
+@router.get("/{user_email}", response_model=User)
+async def get_user(user_email: str, db: Session = Depends(db_session)):
+    db_user = await get_user_by_email(db, user_email)
     if db_user is None:
         return JSONResponse({
             "msg": "No user with that email.",
@@ -48,9 +48,9 @@ async def get_user(email: str, db: Session = Depends(db_session)):
 
     return JSONResponse(user, status_code=status.HTTP_200_OK)
 
-@router.patch("/{email}", response_model=User)
-async def update_user(email: str, user: UserUpdate, db: Session = Depends(db_session)):
-    user, ok = await update_user_info(db, email, user)
+@router.patch("/{user_email}", response_model=User)
+async def update_user(user_email: str, user: UserUpdate, db: Session = Depends(db_session)):
+    user, ok = await update_user_info(db, user_email, user)
     if not ok: 
         return JSONResponse({
             "msg": "Couldn't update user info."
@@ -61,9 +61,9 @@ async def update_user(email: str, user: UserUpdate, db: Session = Depends(db_ses
         status_code=status.HTTP_200_OK)
 
 
-@router.delete("/{email}")
-async def remove_user(email: str, db: Session = Depends(db_session)):
-    msg, ok = await delete_user(db, email)
+@router.delete("/{user_email}")
+async def remove_user(user_email: str, db: Session = Depends(db_session)):
+    msg, ok = await delete_user(db, user_email)
     if not ok:
         return JSONResponse({
             "msg": "Operation failed.",
