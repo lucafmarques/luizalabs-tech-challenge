@@ -14,18 +14,18 @@ async def all_users(db: Session = Depends(db_session)):
 
 @router.post("/", response_model=User)
 async def new_user(user: User, db: Session = Depends(db_session)):
-    db_user = get_user_by_email(db, user.email)
+    db_user = await get_user_by_email(db, user.email)
     if db_user:
         return JSONResponse({
             "msg": "Email already registered.",
         }, status_code=status.HTTP_400_BAD_REQUEST)
     return JSONResponse(
-        create_user(db, user).json(),
+        await create_user(db, user).json(),
         status_code=status.HTTP_201_CREATED)
 
 @router.get("/{email}", response_model=User)
 async def get_user(email: str, db: Session = Depends(db_session)):
-    db_user = get_user_by_email(db, email)
+    db_user = await get_user_by_email(db, email)
     if db_user is None:
         return JSONResponse({
             "msg": "No user with that email.",
@@ -48,7 +48,7 @@ async def get_user(email: str, db: Session = Depends(db_session)):
 
 @router.patch("/{email}", response_model=User)
 async def update_user(email: str, user: UserUpdate, db: Session = Depends(db_session)):
-    user, ok = update_user_info(db, email, user)
+    user, ok = await update_user_info(db, email, user)
     if not ok: 
         return JSONResponse({
             "msg": "Couldn't update user info."
@@ -61,7 +61,7 @@ async def update_user(email: str, user: UserUpdate, db: Session = Depends(db_ses
 
 @router.delete("/{email}")
 async def remove_user(email: str, db: Session = Depends(db_session)):
-    msg, ok = delete_user(db, email)
+    msg, ok = await delete_user(db, email)
     if not ok:
         return JSONResponse({
             "msg": "Operation failed.",

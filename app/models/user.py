@@ -25,23 +25,23 @@ class User(Base):
         }
 
 
-def get_user_by_email(db: Session, email: str):
+async def get_user_by_email(db: Session, email: str):
     return db.query(User).filter(User.email == email).first()
 
 
-def get_users(db: Session):
+async def get_users(db: Session):
     return db.query(User).all()
 
 
-def create_user(db: Session, user: UserCreate):
+async def create_user(db: Session, user: UserCreate):
     user = User(uuid=uuid4(), email=user.email, username=user.username, favorites=[])
     db.add(user)
     db.commit()
     db.refresh(user)
     return user
 
-def update_user_info(db: Session, email: str, user: UserUpdate):
-    db_user = get_user_by_email(db, email)
+async def update_user_info(db: Session, email: str, user: UserUpdate):
+    db_user = await get_user_by_email(db, email)
     if db_user is None:
         return None, False
     db_user.email = user.email or db_user.email
@@ -53,7 +53,7 @@ def update_user_info(db: Session, email: str, user: UserUpdate):
     return db_user, True
 
 
-def delete_user(db: Session, email: str):
+async def delete_user(db: Session, email: str):
     user = get_user_by_email(db, email)
     try:
         db.delete(user)
@@ -63,7 +63,7 @@ def delete_user(db: Session, email: str):
     db.commit()
     return "User deleted.", True
 
-def add_to_favorites(db: Session, db_user: User, product: str):
+async def add_to_favorites(db: Session, db_user: User, product: str):
     if product in db_user.favorites:
         return db_user, False
     
@@ -73,6 +73,6 @@ def add_to_favorites(db: Session, db_user: User, product: str):
     
     return db_user, True
 
-def remove_user_favorites(db: Session, db_user: User, product: str):
+async def remove_user_favorites(db: Session, db_user: User, product: str):
     db_user.favorites.remove(product)
     db.commit()

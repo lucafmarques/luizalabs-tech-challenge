@@ -9,7 +9,7 @@ router = APIRouter()
 
 @router.post("/{user_email}/{product_id}")
 async def add_favorite(user_email: str, product_id: str, db: Session = Depends(db_session)):
-    db_user = get_user_by_email(db, user_email)
+    db_user = await get_user_by_email(db, user_email)
     if db_user is None:
         return JSONResponse({
             "msg": "User doesn't exist"
@@ -21,7 +21,7 @@ async def add_favorite(user_email: str, product_id: str, db: Session = Depends(d
             "msg": "No product with that ID"
         }, status_code=status.HTTP_400_BAD_REQUEST)
     
-    user, ok = add_to_favorites(db, db_user, product_id)
+    user, ok = await add_to_favorites(db, db_user, product_id)
     if not ok:
         return JSONResponse({
             "msg": "Item already in user favorites."
@@ -33,7 +33,7 @@ async def add_favorite(user_email: str, product_id: str, db: Session = Depends(d
 
 @router.get("/{user_email}")
 async def get_favorites(user_email: str, db: Session = Depends(db_session)):
-    db_user = get_user_by_email(db, user_email)
+    db_user = await get_user_by_email(db, user_email)
     if db_user is None:
         return JSONResponse({
             "msg": "User doesn't exist"
@@ -55,7 +55,7 @@ async def get_favorites(user_email: str, db: Session = Depends(db_session)):
 
 @router.delete("/{user_email}/{product_id}")
 async def remove_favorite(user_email: str, product_id: str, db: Session = Depends(db_session)):
-    db_user = get_user_by_email(db, user_email)
+    db_user = await get_user_by_email(db, user_email)
     if db_user is None:
         return JSONResponse({
             "msg": "User doesn't exist"
