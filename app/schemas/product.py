@@ -4,7 +4,7 @@ class Product(BaseModel):
     id: str
     title: str
     image: str
-    price: str
+    price: float
 
     class Config:
         orm_mode = True
