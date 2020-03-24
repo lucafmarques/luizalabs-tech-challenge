@@ -1,6 +1,7 @@
 stages:
   - test
   - build
+  - deploy
 
 variables:
   RELEASE_APP_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG
