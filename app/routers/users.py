@@ -19,8 +19,10 @@ async def new_user(user: User, db: Session = Depends(db_session)):
         return JSONResponse({
             "msg": "Email already registered.",
         }, status_code=status.HTTP_400_BAD_REQUEST)
+
+    new_user = await create_user(db, user)
     return JSONResponse(
-        await create_user(db, user).json(),
+        new_user.json(),
         status_code=status.HTTP_201_CREATED)
 
 @router.get("/{email}", response_model=User)
