@@ -32,3 +32,23 @@ Build Release:
     - docker push $RELEASE_APP_TAG
   retry: 2
 
+Production Deploy:
+  when: manual
+  stage: deploy
+  image: google/cloud-sdk
+  only:
+    - tags
+  before_script:
+    - echo $CLUSTER_KEY > /tmp/key.json
+    - gcloud auth activate-service-account $NAMESPACE-svc@raccoon-cluster.iam.gserviceaccount.com --key-file=/tmp/key.json
+    - gcloud container clusters get-credentials production --zone us-east1-b --project raccoon-cluster
+    - cd deploy/
+    - awk -v app_release="$RELEASE_APP_TAG" '{gsub("{{IMAGE}}", app_release)}1' api-service.yaml | awk -v namespace="$NAMESPACE" '{gsub("{{NAMESPACE}}", namespace)}1' > api-deploy.yaml
+    - awk -v app_release="$RELEASE_APP_TAG" '{gsub("{{IMAGE}}", app_release)}1' db-service.yaml | awk -v namespace="$NAMESPACE" '{gsub("{{NAMESPACE}}", namespace)}1' > db-deploy.yaml
+    - cd ..
+  dependencies:
+    - Build Release
+  script:
+    - kubectl apply -f deploy/api-deploy.yaml
+    - kubectl apply -f deploy/db-deploy.yaml
+
