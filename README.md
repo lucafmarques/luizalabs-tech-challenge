@@ -1,4 +1,4 @@
-# luizalabs-technical-test
+# luizalabs-tech-challenge
 
 This project is an API for a fictional Customer/Favorite Product service.
 
